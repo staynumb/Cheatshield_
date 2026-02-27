@@ -73,7 +73,7 @@ AI-Based-Online-Cheating-Prevention-System
 ### Steps to run this project
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/vishal017/cheatshield.git
+   git clone https://github.com/staynumb/Cheatshield_
    cd AI-Based-Online-Cheating-Prevention-System
    ```
 2. **Create a Virtual Environment (Optional but Recommended)**
@@ -186,7 +186,7 @@ Ensure your code follows the **project’s coding style**.
 
 For questions, suggestions, or collaboration, feel free to reach out:  
 
-- **Email**: vsm52125@gmail.com  
+- **Email**: sathana.ec22@bitsathy.ac.in 
 - **GitHub Issues**: Open an **issue** in this repository.  
 
 ---
