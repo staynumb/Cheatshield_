@@ -46,4 +46,4 @@ AI-Based-Online-Cheating-Prevention-System
 ├── styles.css               # Stylesheet for the UI
 ├── main.py                  # Main script to run the proctoring system
 ├── requirements.txt         # List of required Python packages
-└── README.md                # Project documentation
+└── README.md                # Project documentation    
