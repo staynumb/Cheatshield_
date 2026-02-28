@@ -35,7 +35,10 @@ class ObjectDetector:
             for det in results.pred[0]:
                 x1, y1, x2, y2, conf, cls = det
                 x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
-                class_name = self.classes[int(cls)]
+                cls_idx = int(cls)
+                if cls_idx < 0 or cls_idx >= len(self.classes):
+                    continue  # Skip unknown class
+                class_name = self.classes[cls_idx]
                 
                 # Apply higher confidence threshold for mobile phones
                 if class_name == 'mobile phone' and conf < self.mobile_conf_thres:

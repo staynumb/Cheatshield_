@@ -3,73 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Cheating Prevention</title>
+    <title>Online Exam - CheatShield</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="myscripts.js"></script>
 </head>
 <body>
     <div class="container">
-        <!-- Iframe to load the external test website -->
-        <iframe id="test-iframe" src="{{ test_website_url }}" frameborder="0"></iframe>
-
-        <!-- Overlay for detection interface -->
-        <div id="overlay">
-            <h1>Online Cheating Prevention - Test Monitoring</h1>
-            <div id="video-container">
-                <img src="{{ url_for('video_feed') }}" alt="Video Feed">
-            </div>
+        <!-- Exam content area -->
+        <div id="exam-content">
+            <h1>Online Exam - CheatShield Proctoring Active</h1>
             <div id="instructions">
-                <p>Kindly don't indulge in any malpractice.</p>
+                <h2>📋 Instructions</h2>
+                <ul>
+                    <li>Do not use mobile phones, books, or any unauthorized materials.</li>
+                    <li>Ensure your face is visible in the webcam at all times.</li>
+                    <li>Do not talk or whisper during the exam.</li>
+                    <li>Do not switch tabs or minimize the window.</li>
+                    <li>The test will end automatically after 10 violations.</li>
+                </ul>
             </div>
-            <div id="alerts"></div>
-            <div id="end-test">
-                <h2>End Test</h2>
-                <form method="POST" action="{{ url_for('shutdown') }}">
-                    <label for="password">Enter Password to End Test:</label>
-                    <input type="password" id="password" name="password" required>
-                    <button type="submit">End Test</button>
-                </form>
-                {% if error %}
-                    <p style="color: red;">{{ error }}</p>
-                {% endif %}
+
+            <div id="exam-area">
+                <h2>📝 Sample Exam</h2>
+                <div class="question">
+                    <p><strong>1.</strong> What is the capital of France?</p>
+                    <label><input type="radio" name="q1" value="a"> London</label><br>
+                    <label><input type="radio" name="q1" value="b"> Paris</label><br>
+                    <label><input type="radio" name="q1" value="c"> Berlin</label><br>
+                    <label><input type="radio" name="q1" value="d"> Madrid</label>
+                </div>
+                <div class="question">
+                    <p><strong>2.</strong> What is 2 + 2?</p>
+                    <label><input type="radio" name="q2" value="a"> 3</label><br>
+                    <label><input type="radio" name="q2" value="b"> 4</label><br>
+                    <label><input type="radio" name="q2" value="c"> 5</label><br>
+                    <label><input type="radio" name="q2" value="d"> 6</label>
+                </div>
+                <div class="question">
+                    <p><strong>3.</strong> Which language is used for AI and Machine Learning?</p>
+                    <label><input type="radio" name="q3" value="a"> Java</label><br>
+                    <label><input type="radio" name="q3" value="b"> C++</label><br>
+                    <label><input type="radio" name="q3" value="c"> Python</label><br>
+                    <label><input type="radio" name="q3" value="d"> Ruby</label>
+                </div>
+                <button id="submit-btn" onclick="submitExam()">Submit Exam</button>
             </div>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
     <script>
-        // Request fullscreen mode
-        function enterFullscreen() {
-            const element = document.documentElement;
-            if (element.requestFullscreen) {
-                element.requestFullscreen();
-            } else if (element.mozRequestFullScreen) { // Firefox
-                element.mozRequestFullScreen();
-            } else if (element.webkitRequestFullscreen) { // Chrome, Safari, Opera
-                element.webkitRequestFullscreen();
-            } else if (element.msRequestFullscreen) { // IE/Edge
-                element.msRequestFullscreen();
-            }
-        }
-        enterFullscreen();
-
-        // Prevent exiting fullscreen
-        document.addEventListener('fullscreenchange', (event) => {
-            if (!document.fullscreenElement) {
-                enterFullscreen();
-                alert("Warning: You cannot exit fullscreen mode during the test!");
-            }
-        });
-
         // Prevent copy-paste in the browser
         document.addEventListener('copy', (e) => e.preventDefault());
         document.addEventListener('paste', (e) => e.preventDefault());
         document.addEventListener('cut', (e) => e.preventDefault());
-
-        // Detect tab switching or focus loss
-        window.addEventListener('blur', () => {
-            alert("Warning: Do not switch tabs or minimize the window!");
-            enterFullscreen();
-        });
 
         // Prevent right-click (context menu)
         document.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -80,27 +65,9 @@
             e.returnValue = 'You cannot leave the test until it is completed!';
         });
 
-        // Fetch and display alerts
-        function fetchAlerts() {
-            fetch('/get_alerts')
-                .then(response => response.json())
-                .then(data => {
-                    const alertsDiv = document.getElementById('alerts');
-                    alertsDiv.innerHTML = ''; // Clear previous alerts
-                    data.alerts.forEach(alert => {
-                        if (alert) {
-                            const p = document.createElement('p');
-                            p.textContent = alert;
-                            alertsDiv.appendChild(p);
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching alerts:', error));
+        function submitExam() {
+            alert('Exam submitted successfully! Your responses have been recorded.');
         }
-
-        // Fetch alerts every second
-        setInterval(fetchAlerts, 1000);
-        fetchAlerts(); // Initial fetch
     </script>
 </body>
 </html>

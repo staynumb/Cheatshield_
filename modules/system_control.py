@@ -5,7 +5,8 @@ import time
 class SystemController:
     def __init__(self):
         self.is_test_active = False
-        self.hotkeys = ['ctrl+c', 'ctrl+v', 'cmd+c', 'cmd+v']  # Key combinations to block
+        self.hotkeys = ['ctrl+c', 'ctrl+v']  # Key combinations to block (Windows only)
+        self._registered_hotkeys = []
 
     def suppress_hotkey(self):
         # This function will be called when a blocked hotkey is pressed, and it will suppress the action
@@ -16,8 +17,13 @@ class SystemController:
         print("Test started. Copy-paste is disabled, and fullscreen mode is enforced.")
 
         # Block copy-paste shortcuts using add_hotkey
+        self._registered_hotkeys = []
         for hotkey in self.hotkeys:
-            keyboard.add_hotkey(hotkey, self.suppress_hotkey, suppress=True)
+            try:
+                handle = keyboard.add_hotkey(hotkey, self.suppress_hotkey, suppress=True)
+                self._registered_hotkeys.append(handle)
+            except Exception as e:
+                print(f"Warning: Could not block hotkey '{hotkey}': {e}")
 
         # Enforce fullscreen mode (using pyautogui to simulate F11)
         pyautogui.press('f11')
@@ -26,9 +32,13 @@ class SystemController:
         self.is_test_active = False
         print("Test stopped. Copy-paste is re-enabled.")
 
-        # Remove hotkey blocks
-        for hotkey in self.hotkeys:
-            keyboard.remove_hotkey(hotkey)
+        # Remove hotkey blocks safely
+        for handle in self._registered_hotkeys:
+            try:
+                keyboard.remove_hotkey(handle)
+            except Exception:
+                pass
+        self._registered_hotkeys = []
 
         # Exit fullscreen mode (optional, simulate F11 again to toggle)
         pyautogui.press('f11')

@@ -48,14 +48,15 @@ AI-Based-Online-Cheating-Prevention-System
 ```
 │
 ├── models/
-│   ├──best.pt               # Custom-trained YOLOv5 model for object detection
-├── modules/                 # Source code directory
-│   ├── object_detection.py  # Module for YOLOv5 object detection
-│   ├── face_detection.py    # Module for MTCNN face detection
-│   ├── audio_detection.py   # Module for YAMNet audio detection
-│   ├── system_control.py    # Module for enforcing exam rules (fullscreen, shortcuts)
-├── index.html               # Frontend UI that appears on the external website
-├── styles.css               # Stylesheet for the UI
+│   └── best.pt              # Custom-trained YOLOv5 model for object detection
+├── modules/                 # Detection modules package
+│   ├── __init__.py          # Package initializer
+│   ├── object_detection.py  # YOLOv5 object detection module
+│   ├── face_detection.py    # MTCNN face detection module
+│   ├── audio_detection.py   # YAMNet audio detection module
+│   └── system_control.py    # Exam rule enforcement (fullscreen, shortcuts)
+├── index.html               # Local exam page (served via Python http.server)
+├── styles.css               # Stylesheet for the exam page
 ├── main.py                  # Main script to run the proctoring system
 ├── requirements.txt         # List of required Python packages
 └── README.md                # Project documentation
@@ -84,7 +85,7 @@ AI-Based-Online-Cheating-Prevention-System
    ```
    venv\Scripts\activate
    ```
-   ***For Mac***
+   ***For Mac/Linux***
    ```
    source venv/bin/activate
    ```
@@ -92,23 +93,32 @@ AI-Based-Online-Cheating-Prevention-System
    ```
    pip install -r requirements.txt
    ```
-4. **Run the project**  
+4. **Start the Local Exam Server** (in a separate terminal)
+   ```
+   python -m http.server 8000
+   ```
+   This serves `index.html` at `http://localhost:8000/`.
+
+5. **Run the Proctoring System** (in another terminal)
    ```
    python main.py
    ```
+   The monitoring window and exam web view will launch automatically.
+
+> **Note:** Both the local server and the proctoring system must be running simultaneously. The proctoring system connects to `http://localhost:8000/` to load the exam page.
 
   ## 🖥️ Usage
 
-1. **Launch the Application**: Run `main.py` to start the proctoring system.  
-2. **Exam Setup**: The system loads the exam website in a `QWebEngineView` window, enforcing fullscreen mode and disabling shortcuts.  
-3. **Monitoring**: The PyQt5 interface displays the webcam feed, violation count, and warnings in real-time.  
-4. **Violation Handling**:  
+1. **Start Local Server**: Run `python -m http.server 8000` to serve the exam page locally.
+2. **Launch the Application**: Run `python main.py` to start the proctoring system.  
+3. **Exam Setup**: The system loads the local exam page (`http://localhost:8000/`) in a `QWebEngineView` window, enforcing fullscreen mode and disabling shortcuts.  
+4. **Monitoring**: The PyQt5 interface displays the webcam feed, violation count, and warnings in real-time.  
+5. **Violation Handling**:  
    - Issues warnings for detected violations (e.g., mobile phone detected, multiple faces, speech).  
    - A **15-second cooldown** prevents rapid triggers.  
    - The test **ends after 10 violations**.  
-5. **End Test**:  
+6. **End Test**:  
    - The test can be ended **manually via a password-protected dialog** or **automatically after 10 violations**.  
-   - Violations are logged in the `logs/` directory with timestamps.  
 
 ---
 

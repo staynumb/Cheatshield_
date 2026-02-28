@@ -16,7 +16,7 @@ import time
 import psutil
 import torch
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QLineEdit, QDialog
-from PyQt5.QtCore import Qt, QTimer, QUrl
+from PyQt5.QtCore import Qt, QTimer, QUrl, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from modules.object_detection import ObjectDetector
@@ -46,7 +46,7 @@ class EndTestDialog(QDialog):
         
         self.setLayout(layout)
         # Password should be set by the user in a configuration file or environment variable
-        self.password = "SET_YOUR_PASSWORD"  # Placeholder; replace with your own password
+        self.password = "admin321"  # Placeholder; replace with your own password
 
     def check_password(self):
         entered_password = self.password_input.text()
@@ -56,8 +56,12 @@ class EndTestDialog(QDialog):
             self.error_label.setText("Incorrect password. Please try again.")
 
 class MonitoringWindow(QMainWindow):
+    warning_signal = pyqtSignal(str)  # Signal for thread-safe warning display
+
     def __init__(self):
         super().__init__()
+        # Connect the warning signal to display_warning (runs on main thread)
+        self.warning_signal.connect(self.display_warning)
         self.setWindowTitle("Online Cheating Prevention - Monitoring")
         self.setGeometry(0, 0, 300, 280)
         
@@ -122,7 +126,7 @@ class MonitoringWindow(QMainWindow):
         screen = QApplication.primaryScreen().size()
         self.web_view.setGeometry(0, 0, screen.width(), screen.height())  # Fullscreen
         # Replace with the actual test URL or configure via environment variable
-        self.test_url = "https://example.com/"  # Placeholder; set your test URL
+        self.test_url = "http://localhost:8000/"  # Local test server URL
         self.web_view.load(QUrl(self.test_url))
         
         # Inject JavaScript to enforce fullscreen and disable shortcuts/right-click
@@ -255,7 +259,7 @@ class MonitoringWindow(QMainWindow):
         self.max_warnings = 10
         self.frame_counter = 0
         self.closing = False
-        self.last_violation_time = 0
+        self.last_violation_time = 0.0
         self.violation_cooldown = 15  # 15 seconds cooldown between violations
         
         # Start system controls
@@ -320,7 +324,7 @@ class MonitoringWindow(QMainWindow):
         while self.test_active and not self.closing:
             is_suspicious, confidence, message = self.audio_detector.detect_audio()
             if is_suspicious:
-                self.display_warning(message)
+                self.warning_signal.emit(message)  # Thread-safe: emit signal instead of direct call
             time.sleep(self.audio_detector.detection_interval)
 
     def display_warning(self, message):
