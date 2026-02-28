@@ -16,7 +16,7 @@ The system integrates multiple detection modules—**object detection (YOLOv5)**
 
 ## 🚀 Features
 
-- **Object Detection**: Identifies prohibited items like mobile phones and books using YOLOv5 with a custom-trained model (`best.pt`).
+- **Object Detection**: Identifies prohibited items like mobile phones, books, and laptops using YOLOv5 with a custom-trained model (`best.pt`).
 - **Face Detection**: Ensures the candidate’s presence and flags multiple faces using MTCNN, preventing impersonation.
 - **Audio Detection**: Detects suspicious sounds like speech or whispering using YAMNet, with a lowered threshold for improved sensitivity.
 - **System Control**: Enforces exam rules using `QWebEngineView`, maintaining fullscreen mode and disabling shortcuts (e.g., Alt+Tab, F11).
@@ -31,7 +31,7 @@ The system integrates multiple detection modules—**object detection (YOLOv5)**
 ## 🛠️ Technologies Used
 
 - **Python 3.x**: Core programming language for the system.
-- **YOLOv5**: For object detection to identify prohibited items like mobile phones and books.
+- **YOLOv5**: For object detection to identify prohibited items like mobile phones, books, and laptops.
 - **MTCNN**: For face detection to ensure candidate presence and prevent impersonation.
 - **YAMNet**: For audio detection to flag suspicious sounds like speech or whispering.
 - **PyQt5**: For building the user interface, displaying webcam feeds, and showing warnings.
@@ -73,8 +73,8 @@ AI-Based-Online-Cheating-Prevention-System
 ### Steps to run this project
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/staynumb/Cheatshield_
-   cd AI-Based-Online-Cheating-Prevention-System
+   git clone https://github.com/staynumb/Cheatshield_.git
+   cd Cheatshield_
    ```
 2. **Create a Virtual Environment (Optional but Recommended)**
    ```
@@ -117,7 +117,7 @@ AI-Based-Online-Cheating-Prevention-System
 - **Enhanced Supervision**: MTCNN ensures continuous face detection with high reliability, flagging impersonation attempts.  
 - **Precise Object Detection**: YOLOv5 detects prohibited items accurately with confidence thresholds:  
   - **Mobile Phones** → `0.4`  
-  - **Books** → `0.2`  
+  - **Books/Laptops** → `0.2`  
 - **Effective Audio Detection**: YAMNet detects speech with a **0.3 threshold**, optimized with a **5-second detection interval**.  
 - **System Control**: `QWebEngineView` enforces exam rules, preventing unauthorized access.  
 - **Resource Efficiency**: Optimized to run smoothly even during YouTube playback with:  
@@ -134,7 +134,7 @@ AI-Based-Online-Cheating-Prevention-System
   - **Solution**: Reduced webcam FPS (`10`), lowered resolution (`160x120`), and optimized detection frequencies (`every 8th frame` for object/face detection, `every 5 seconds` for audio).  
 
 - **Misclassification in Object Detection**  
-  - **Solution**: Improved by setting confidence thresholds (`0.4` for mobile phones, `0.2` for books) and using a **custom-trained YOLOv5 model**.  
+  - **Solution**: Improved by setting confidence thresholds (`0.4` for mobile phones, `0.2` for books and laptops) and using a **custom-trained YOLOv5 model**.  
 
 - **White Box Issue in UI**  
   - **Solution**: Made the warning display (`QWebEngineView`) **transparent** in the PyQt5 interface.  
