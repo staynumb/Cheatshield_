@@ -1,4 +1,14 @@
 import sys
+import os
+
+# Fix for PyQt5 virtual environment issue: "Could not find the Qt platform plugin 'windows'"
+try:
+    import PyQt5
+    plugin_path = os.path.join(os.path.dirname(PyQt5.__file__), 'Qt5', 'plugins')
+    os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = plugin_path
+except ImportError:
+    pass
+
 import cv2
 import numpy as np
 import threading
