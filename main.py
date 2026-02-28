@@ -1,5 +1,7 @@
 import sys
 import os
+import csv
+from datetime import datetime
 
 # --- CRITICAL START LOGGING ---
 print("MAIN.PY: Process starting...", flush=True)
@@ -379,6 +381,10 @@ class MonitoringWindow(QMainWindow):
         self.alert_view.show()
         self.alert_view.page().runJavaScript(f'displayAlert("{message}");')
         
+        # Log to CSV
+        violation_type = "Critical" if "Face not visible" not in message else "Information"
+        self.log_to_csv(violation_type, message)
+        
         # Ensure the alert view stays on top
         self.alert_view.raise_()
         
@@ -386,6 +392,15 @@ class MonitoringWindow(QMainWindow):
         if self.warning_count >= self.max_warnings:
             print("Maximum warnings reached. Ending test...")
             self.end_test(automatic=True)
+
+    def log_to_csv(self, violation_type, message):
+        try:
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            with open(self.csv_file, mode='a', newline='', encoding='utf-8') as file:
+                writer = csv.writer(file)
+                writer.writerow([timestamp, self.warning_count, violation_type, message])
+        except Exception as e:
+            print(f"Error logging to CSV: {e}")
 
     def focusInEvent(self, event):
         # Re-raise the window when it gains focus

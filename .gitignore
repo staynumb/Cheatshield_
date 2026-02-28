@@ -18,6 +18,7 @@ __pycache__/
 # Dataset and models
 # data/
 # models/
+results/
 
 # Distribution / packaging
 .Python
