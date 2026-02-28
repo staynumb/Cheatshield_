@@ -1,7 +1,41 @@
 import sys
 import os
 
-# Fix for PyQt5 virtual environment issue: "Could not find the Qt platform plugin 'windows'"
+# --- CRITICAL START LOGGING ---
+print("MAIN.PY: Process starting...", flush=True)
+
+# 1. PRIMARY HEAVY IMPORTS (Must come before any Qt initialization)
+print("MAIN.PY: Importing torch...", flush=True)
+import torch
+print("MAIN.PY: Importing cv2...", flush=True)
+import cv2
+print("MAIN.PY: Importing numpy...", flush=True)
+import numpy as np
+import threading
+import time
+import psutil
+
+
+# 2. DETECTION MODULES (Uses YOLOv5/Torch)
+print("MAIN.PY: Importing ObjectDetector...", flush=True)
+from modules.object_detection import ObjectDetector
+print("MAIN.PY: Importing FaceDetector...", flush=True)
+from modules.face_detection import FaceDetector
+print("MAIN.PY: Importing AudioDetector...", flush=True)
+from modules.audio_detection import AudioDetector
+print("MAIN.PY: Importing SystemController...", flush=True)
+from modules.system_control import SystemController
+
+# 3. TECHNICAL MITIGATIONS (Now that Torch is loaded)
+print("MAIN.PY: Applying Qt mitigations...", flush=True)
+os.environ["QTWEBENGINE_DISABLE_SANDBOX"] = "1"
+
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication
+QApplication.setAttribute(Qt.AA_UseDesktopOpenGL)
+QApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
+
+# Fix for PyQt5 virtual environment plugin path
 try:
     import PyQt5
     plugin_path = os.path.join(os.path.dirname(PyQt5.__file__), 'Qt5', 'plugins')
@@ -9,20 +43,16 @@ try:
 except ImportError:
     pass
 
-import cv2
-import numpy as np
-import threading
-import time
-import psutil
-import torch
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QLineEdit, QDialog
-from PyQt5.QtCore import Qt, QTimer, QUrl, pyqtSignal
+# 4. UI IMPORTS
+print("MAIN.PY: Importing UI components...", flush=True)
+from PyQt5.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QPushButton, QLineEdit, QDialog
+from PyQt5.QtCore import QTimer, QUrl, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from modules.object_detection import ObjectDetector
-from modules.face_detection import FaceDetector
-from modules.audio_detection import AudioDetector
-from modules.system_control import SystemController
+print("MAIN.PY: All imports complete.", flush=True)
+
+
+
 
 class EndTestDialog(QDialog):
     def __init__(self, parent=None):

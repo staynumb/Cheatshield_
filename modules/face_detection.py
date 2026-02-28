@@ -8,11 +8,15 @@ class FaceDetector:
         self.detector = MTCNN()
 
     def detect_faces(self, frame):
-        # Convert frame to RGB (MTCNN expects RGB images)
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-        # Detect faces
-        faces = self.detector.detect_faces(frame_rgb)
+        # Detect faces with safety wrapper for MTCNN internal errors
+        try:
+            faces = self.detector.detect_faces(frame_rgb)
+        except ValueError:
+            # This happens in MTCNN when a face is partially detected but then lost between stages
+            faces = []
+        except Exception as e:
+            print(f"Face detection error: {e}")
+            faces = []
 
         # Draw bounding boxes around detected faces
         for face in faces:

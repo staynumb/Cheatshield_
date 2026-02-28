@@ -67,7 +67,8 @@ AI-Based-Online-Cheating-Prevention-System
 ## ⚙️ Installation and Setup
 
 ### Prerequisites
-- Python 3.8 or higher 
+- Python 3.11 (Recommended)
+- [Microsoft Visual C++ Redistributable (2015-2022)](https://aka.ms/vs/17/release/vc_redist.x64.exe) - **Required for PyTorch on Windows**
 - A webcam and microphone
 - Internet connection (for initial package installation)
 
@@ -90,7 +91,12 @@ AI-Based-Online-Cheating-Prevention-System
    source venv/bin/activate
    ```
 3. **Install Dependencies**
+   First, install the CPU-optimized version of PyTorch to ensure compatibility:
+   ```powershell
+   pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cpu
    ```
+   Then install the remaining requirements:
+   ```bash
    pip install -r requirements.txt
    ```
 4. **Start the Local Exam Server** (in a separate terminal)
